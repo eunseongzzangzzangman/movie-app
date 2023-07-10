@@ -50,6 +50,16 @@ function App() {
     saveToLocalStorage(newList); //저장하기
   };
 
+  //선호작을 제거하는 함수(id가 같으면 제거)
+  const removeMovie = (movie) => {
+    const newList = favourites.filter(
+      (favourite) => favourite.imdbID !== movie.imdbID
+    );
+
+    setFavourites(newList);
+    saveToLocalStorage(newList);
+  };
+
   return (
     <div className="container-fluid movie-app">
       <div className="row align-items-center my-4">
@@ -67,7 +77,11 @@ function App() {
         <MovieListHeading heading="내 선호작" />
       </div>
       <ScrollContainer className="row scroll-container">
-        <MovieList movies={favourites} addMovie={false} />
+        <MovieList
+          movies={favourites}
+          handleClick={removeMovie}
+          addMovie={false}
+        />
       </ScrollContainer>
     </div>
   );
