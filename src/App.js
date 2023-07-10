@@ -8,7 +8,8 @@ import ScrollContainer from "react-indiana-drag-scroll";
 
 function App() {
   const [movies, setMovies] = useState([]);
-  const [searchValue, setSearchValue] = useState([]);
+  const [favourites, setFavourites] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
 
   //검색어로 영화데이터 요청 async/await는 쌍으로 사용
   const getMovieRequest = async (searchValue) => {
@@ -29,6 +30,26 @@ function App() {
     }
   }, [searchValue]);
 
+  //브라우저 저장소에서 선호작 영화들을 가져옴 앱 시작시 1번 실행
+  useEffect(() => {
+    const movieFavourites = JSON.parse(localStorage.getItem("favourites"));
+    if (movieFavourites) {
+      setFavourites(movieFavourites);
+    }
+  }, []);
+
+  //브라우저에 저장하기
+  const saveToLocalStorage = (items) => {
+    localStorage.setItem("favourites", JSON.stringify(items));
+  };
+
+  //선호작에 영화를 추가하기
+  const addFavouriteMovie = (movie) => {
+    const newList = [...favourites, movie]; //선호작 리스트에 + 영화하나 추가
+    setFavourites(newList); //새 선호작으로 업데이트
+    saveToLocalStorage(newList); //저장하기
+  };
+
   return (
     <div className="container-fluid movie-app">
       <div className="row align-items-center my-4">
@@ -36,11 +57,18 @@ function App() {
         <SearchBox searchValue={searchValue} setSearchValue={setSearchValue} />
       </div>
       <ScrollContainer className="row scroll-container">
-        <MovieList movies={movies} />
+        <MovieList
+          movies={movies}
+          handleClick={addFavouriteMovie}
+          addMovie={true}
+        />
       </ScrollContainer>
       <div className="row align-items-center my-4">
         <MovieListHeading heading="내 선호작" />
       </div>
+      <ScrollContainer className="row scroll-container">
+        <MovieList movies={favourites} addMovie={false} />
+      </ScrollContainer>
     </div>
   );
 }
