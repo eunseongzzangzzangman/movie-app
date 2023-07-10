@@ -4,6 +4,7 @@ import "./App.css";
 import MovieList from "./components/MovieList";
 import MovieListHeading from "./components/MovieListHeading";
 import SearchBox from "./components/SearchBox";
+import ScrollContainer from "react-indiana-drag-scroll";
 
 function App() {
   const [movies, setMovies] = useState([]);
@@ -31,11 +32,14 @@ function App() {
   return (
     <div className="container-fluid movie-app">
       <div className="row align-items-center my-4">
-        <MovieListHeading heading="Movies" />
+        <MovieListHeading heading="영화 검색과 선호작 등록" />
         <SearchBox searchValue={searchValue} setSearchValue={setSearchValue} />
       </div>
-      <div className="row">
+      <ScrollContainer className="row scroll-container">
         <MovieList movies={movies} />
+      </ScrollContainer>
+      <div className="row align-items-center my-4">
+        <MovieListHeading heading="내 선호작" />
       </div>
     </div>
   );
